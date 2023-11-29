@@ -1,0 +1,196 @@
+<div class="row">
+    <div class="col-sm-12">
+        <app-card [hidHeader]="true">
+            <div class="container">
+                <div class="row header">
+                    <div class="col-md-6">
+                        <h2>EDITAR PEDIDO</h2>
+                    </div>
+                    <div class="col-md-3 text-end">
+                    </div>
+                    <div class="row">
+                        <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
+                            <div class="form-group">
+                                <label for="nombre">Fecha</label>
+                                <input type="date" class="form-control" id="fecha" formControlName="fecha">
+
+                                <div *ngIf="formulario.get('fecha').hasError('required') && formulario.get('fecha').touched"
+                                    class="text-danger">
+                                    Fecha es requerida
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="total">Total</label>
+                                <input type="text" class="form-control" id="total" placeholder="total"
+                                    formControlName="total">
+                            </div>
+                            <div class="row col-md-12">
+                                <div class="col-md-6">
+                                    <label for="nombre">Cliente Actual</label>
+                                    <input type="text" class="form-control" value="{{nombreCliente}}" disabled>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="nombre">Cambiar de Cliente:</label>
+                                        <select class="form-select" formControlName="idCliente">
+                                            <option *ngFor="let cliente of clientes" [ngValue]="cliente">
+                                                {{ cliente.nombre }}
+                                            </option>
+                                        </select>
+                                        <div *ngIf="formulario.get('idCliente').hasError('required') && formulario.get('idCliente').touched"
+                                            class="text-danger">
+                                            Unidad es requerida
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary" [disabled]="formulario.invalid"
+                                style="width: 100%;">Guardar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="row detalles">
+                <div class="col-sm-6">
+                    <h4>PRODUCTOS DEL PEDIDO</h4>
+                    <div class="row">
+                        <div *ngFor="let detallePedido of detallesPedido" class="cardProducto" class="col-md-6">
+                            <app-card [hidHeader]="true">
+                                <div class="row align-items-center">
+                                    <div class="col-8">
+                                        <h5 class="text-c-yellow">{{detallePedido.idProducto.nombre}}</h5>
+                                        <h6 class="text-muted m-b-0">{{detallePedido.cantidad}} {{detallePedido.idProducto.idUnidad.abreviatura}}</h6>
+                                    </div>
+                                    <div class="col-4">
+                                        <button type="button" class="btn btn-danger p-1" ngbTooltip="Borrar producto del carrito">
+                                            <mat-icon style="font-size: 16px;" (click)="borrarDetalle(detallePedido)">delete</mat-icon>
+                                        </button>
+                                    </div>
+                                </div>
+                            </app-card>
+                        </div>
+                    </div>
+
+                    <h4>CARRITO DE COMPRAS</h4>
+                    <div class="row">
+                        <div *ngFor="let detalleCarrito of detalleCarrito;let i = index" class="cardProducto" class="col-md-6">
+                            <app-card [hidHeader]="true">
+                                <div class="row align-items-center">
+                                    <div class="col-8">
+                                        <h5 class="text-c-yellow">{{detalleCarrito.idProducto.nombre}}</h5>
+                                        <h6 class="text-muted m-b-0">{{detalleCarrito.cantidad}} {{detalleCarrito.idProducto.idUnidad.abreviatura}}</h6>
+                                    </div>
+                                    <div class="col-4">
+                                        <button type="button" class="btn btn-danger p-1" ngbTooltip="Borrar producto del carrito">
+                                            <mat-icon style="font-size: 16px;" (click)="borrarProducto(i)">delete</mat-icon>
+                                        </button>
+                                    </div>
+                                </div>
+                            </app-card>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <h4>PRODUCTOS</h4>
+                    <mat-tab-group>
+                        <mat-tab *ngFor="let categoria of categorias" [label]="categoria.nombre">
+                            <div class="row">
+                                <div class="col-md-4 producto"
+                                    *ngFor="let producto of obtenerProductosPorCategoria(categoria)">
+                                    <app-card [hidHeader]="true" blockClass="text-center">
+                                        <div>
+                                            <img [src]="producto.imagen" style="max-width: 40px; max-height: 30px;" ma
+                                                alt="">
+                                        </div>
+                                        <h5 class="m-b-15">{{producto.nombre}}</h5>
+                                        <div class="risk-rate">
+                                            <span><b class="text-muted">$ {{producto.precio}}
+                                                    {{producto.idUnidad.abreviatura}}</b></span>
+                                        </div>
+                                        <div class="row justify-content-center ">
+                                            <div class="col m-t-15">
+                                                <input type="number" class="form-control input-cantidad"
+                                                    [(ngModel)]="cantidadProductos[producto.idProducto]"
+                                                    placeholder="Cantidad">
+                                            </div>
+                                            <div class="col m-t-15 b-r-default">
+                                                <button type="button" class="btn btn-success"
+                                                    ngbTooltip="Agregar producto al carrito"
+                                                    (click)="agregarCarrito(cantidadProductos[producto.idProducto], producto)">Agregar</button>
+                                            </div>
+                                        </div>
+                                    </app-card>
+                                </div>
+                            </div>
+                        </mat-tab>
+                    </mat-tab-group>
+                </div>
+            </div>
+        </app-card>
+    </div>
+</div>
+
+<!--
+
+             <div class="row">
+                <div class="col-sm-6">
+                    <h4>CARRITO DE COMPRAS</h4>
+                    <div class="row">
+                        <div *ngFor="let detalleCarrito of detalleCarrito;let i = index" class="cardProducto" class="col-md-6">
+                            <app-card [hidHeader]="true">
+                                <div class="row align-items-center">
+                                    <div class="col-4 text-right">
+                                        <img style="max-width: 50px; max-height: 30px;" [src]="detalleCarrito.idProducto.imagen" alt="">
+                                    </div>
+                                    <div class="col-4">
+                                        <h5 class="text-c-yellow">{{detalleCarrito.idProducto.nombre}}</h5>
+                                        <h6 class="text-muted m-b-0">{{detalleCarrito.cantidad}} {{detalleCarrito.idProducto.idUnidad.abreviatura}}</h6>
+                                    </div>
+                                    <div class="col-4">
+                                        <button type="button" class="btn btn-danger p-1" ngbTooltip="Borrar producto del carrito">
+                                            <mat-icon style="font-size: 16px;" (click)="borrarProducto(i)">delete</mat-icon>
+                                        </button>
+                                    </div>
+                                </div>
+                            </app-card>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <h4>PRODUCTOS</h4>
+
+                    <mat-tab-group>
+                        <mat-tab *ngFor="let categoria of categorias" [label]="categoria.nombre">
+                            <div class="row">
+                                <div class="col-md-4 producto"
+                                    *ngFor="let producto of obtenerProductosPorCategoria(categoria)">
+                                    <app-card [hidHeader]="true" blockClass="text-center">
+                                        <div>
+                                            <img [src]="producto.imagen" style="max-width: 40px; max-height: 30px;" ma
+                                                alt="">
+                                        </div>
+                                        <h5 class="m-b-15">{{producto.nombre}}</h5>
+                                        <div class="risk-rate">
+                                            <span><b class="text-muted">$ {{producto.precio}}
+                                                    {{producto.idUnidad.abreviatura}}</b></span>
+                                        </div>
+                                        <div class="row justify-content-center ">
+                                            <div class="col m-t-15">
+                                                <input type="number" class="form-control input-cantidad"
+                                                    [(ngModel)]="cantidadProductos[producto.idProducto]"
+                                                    placeholder="Cantidad">
+                                            </div>
+                                            <div class="col m-t-15 b-r-default">
+                                                <button type="button" class="btn btn-success"
+                                                    ngbTooltip="Agregar producto al carrito"
+                                                    (click)="agregarCarrito(cantidadProductos[producto.idProducto], producto)">Agregar</button>
+                                            </div>
+                                        </div>
+                                    </app-card>
+                                </div>
+                            </div>
+                        </mat-tab>
+                    </mat-tab-group>
+                </div>
+            </div>
+  -->

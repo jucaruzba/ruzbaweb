@@ -1,0 +1,59 @@
+<div class="row">
+    <div class="col-sm-12">
+        <app-card [hidHeader]="true">
+            <div class="container">
+                <div class="row header">
+                    <div class="col-md-6">
+                        <h2>PEDIDOS</h2>
+                    </div>
+                    <div class="col-md-3 text-end">
+                        <button type="button" class="btn btn-primary" ngbTooltip="Agrega un nuevo pedido" 
+                        (click)="nuevoPedido()"
+                        >Nuevo
+                            Pedido</button>
+                    </div>
+                    <div class="col-md-3 text-end">
+                        <div class="input-group-prepend">
+                            <select class="form-select" [(ngModel)]="selectedCliente" (change)="pedidosPorCliente()">
+                                <option selected>Ordenar por...</option>
+                                <optgroup label="Por Cliente">
+                                  <option *ngFor="let cliente of clientes" [ngValue]="cliente">{{ cliente.nombre }}</option>
+                                </optgroup>
+                              </select>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4" *ngFor="let pedido of pedidos">
+                        <app-card [hidHeader]="true" cardClass="user-card2" blockClass="text-center" (click)="openDialogMostrar(pedido)">
+                            <div>
+                                <img [src]="pedido.idCliente.idUser.imagen" style="max-width: 150px;" alt="">
+                            </div>
+                            <h5 class="m-b-15">{{pedido.idCliente.nombre}}</h5>
+                            <div class="risk-rate">
+                                <span><b class="text-muted">{{pedido.fecha}}</b></span>
+                            </div>
+                            <div class="row justify-content-center m-t-10 b-t-default m-l-0 m-r-0">
+                                <div class="col m-t-15 b-r-default">
+                                    <h6 class="text-muted">Estatus</h6>
+                                    <button type="button" class="btn btn-dark"
+                                    ng-style="{'color': pedido.estatus === 0 ? 'blue' : (pedido.estatus === 1 ? 'yellow' : (pedido.estatus === 2 ? 'orange' : 'green'))}">
+                                    {{ pedido.estatus === 0 ? 'Nuevo pedido' : (pedido.estatus === 1 ? 'Preparación' :
+                                    (pedido.estatus === 2 ? 'En ruta' : 'Entregado')) }}
+                                </button>
+                                </div>
+                                <div class="col m-t-15">
+                                    <h6 class="text-muted">Total</h6>
+                                    <div class="input-group-prepend align-items-center">
+                                        <span class="input-group-text align-items-center">$ {{pedido.total}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </app-card>
+                    </div>
+                </div>
+            </div>
+        </app-card>
+    </div>
+</div>

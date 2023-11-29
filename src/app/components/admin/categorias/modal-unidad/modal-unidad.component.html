@@ -1,0 +1,35 @@
+<div class="container">
+    <div class="header">
+        <h3>UNIDADES</h3>
+    </div>
+    <div class="body">
+        <app-card [hidHeader]="true">
+            <div class="col-md-12 ">
+                <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
+                    <div class="form-group">
+                        <label for="presentacion">Presentacion</label>
+                        <input type="text" class="form-control" id="presentacion" placeholder="Presentacion de la unidad"
+                            formControlName="presentacion">
+                        <!-- Agregado: Mostrar error si el campo es requerido y no se ha llenado -->
+                        <div *ngIf="formulario.get('presentacion').hasError('required') && formulario.get('presentacion').touched"
+                            class="text-danger">
+                            Presentacion es requerida
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="abreviatura">Abreviatura</label>
+                        <input type="text" class="form-control" id="abreviatura" placeholder="Abreviatura de la unidad"
+                            formControlName="abreviatura">
+                        <!-- Agregado: Mostrar error si el campo es requerido y no se ha llenado -->
+                        <div *ngIf="formulario.get('abreviatura').hasError('required') && formulario.get('abreviatura').touched"
+                            class="text-danger">
+                            Abreviatura es requerida
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" [disabled]="formulario.invalid"
+                        style="width: 100%;">Guardar</button>
+                </form>
+            </div>
+        </app-card>
+    </div>
+</div>

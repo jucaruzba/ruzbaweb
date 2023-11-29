@@ -1,0 +1,67 @@
+<div class="container">
+    <div class="header">
+        <h3>USUARIO</h3>
+    </div>
+    <div class="body">
+        <app-card [hidHeader]="true">
+            <div class="col-md-12 ">
+                <form [formGroup]="formulario" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+                    <img *ngIf="this.modoEditar===true" style="max-width: 100px;"
+                        [src]="data.imagen" alt="">
+
+
+                    <div class="form-group">
+                        <input type="file"  formControlName="imagen" (change)="onFileSelected($event)" accept="image/*">
+
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" placeholder="Nombre del Usuario"
+                            formControlName="nombre">
+                        <!-- Agregado: Mostrar error si el campo es requerido y no se ha llenado -->
+                        <div *ngIf="formulario.get('nombre').hasError('required') && formulario.get('nombre').touched"
+                            class="text-danger">
+                            Nombre es requerido
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="nombre">Email</label>
+                        <input type="email" class="form-control" id="email" placeholder="Email"
+                            formControlName="email">
+                        <!-- Agregado: Mostrar error si el campo es requerido y no se ha llenado -->
+                        <div *ngIf="formulario.get('email').hasError('required') && formulario.get('email').touched"
+                            class="text-danger">
+                            Email es requerido
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label for="nombre">Contraseña</label>
+                        <input type="password" class="form-control" id="password" placeholder="password"
+                            formControlName="password">
+                        <!-- Agregado: Mostrar error si el campo es requerido y no se ha llenado -->
+                        <div *ngIf="formulario.get('password').hasError('required') && formulario.get('password').touched"
+                            class="text-danger">
+                            Contaseña es requerida
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rol">Rol</label>
+                        <select class="form-select" formControlName="rol">
+                            <option *ngFor="let rol of roles" [ngValue]="rol">
+                                {{ rol.descripcion }}
+                            </option>
+                        </select>
+                        <div *ngIf="formulario.get('rol').hasError('required') && formulario.get('rol').touched"
+                            class="text-danger">
+                            Rol es requerida
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" [disabled]="formulario.invalid"
+                        style="width: 100%;">Guardar</button>
+                </form>
+            </div>
+        </app-card>
+    </div>
+</div>

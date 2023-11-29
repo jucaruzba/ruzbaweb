@@ -1,0 +1,54 @@
+<div class="row">
+    <div class="col-sm-12">
+        <app-card [hidHeader]="true">
+            <div class="row header">
+                <div class="col-md-6">
+                    <h2>CLIENTES</h2>
+                </div>
+                <div class="col-md-3 text-end">
+
+                </div>
+                <div class="col-md-3 text-end">
+                    <button type="button" class="btn btn-primary btn-header" ngbTooltip="Agrega un nuevo cliente" (click)="openDialogProducto(null)">Nuevo Cliente</button>
+                </div>
+
+            </div>
+            <div class="container">
+                <app-card [hidHeader]="true" cardClass="table-card" blockClass="p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Foto
+                                    </th>
+                                    <th>Nombre</th>
+                                    <th>RFC</th>
+                                    <th class="text-center"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let cliente of clientes">
+                                    <td>
+                                        <div class="d-inline-block align-middle">
+                                            <img [src]="cliente.idUser.imagen" alt="user image"
+                                                class="img-radius wid-40 align-top m-r-15">
+                                        </div>
+                                    </td>
+                                    <td>{{cliente.nombre}}</td>
+                                    <td>{{cliente.rfc}}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-info"
+                                            ngbTooltip="Editar usuario" (click)="openDialogProducto(cliente)">Editar</button>
+                                        <button type="button" class="btn btn-danger"
+                                            ngbTooltip="Borrar usuario" (click)="this.eliminarUsuario(cliente)">Borrar</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </app-card>
+            </div>
+        </app-card>
+    </div>
+</div>

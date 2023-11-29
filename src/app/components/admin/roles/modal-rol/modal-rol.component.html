@@ -1,0 +1,35 @@
+<div class="container">
+    <div class="header">
+        <h3>ROLES</h3>
+    </div>
+    <div class="body">
+        <app-card [hidHeader]="true">
+            <div class="col-md-12 ">
+                <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" placeholder="Nombre del rol"
+                            formControlName="nombre">
+                        <!-- Agregado: Mostrar error si el campo es requerido y no se ha llenado -->
+                        <div *ngIf="formulario.get('nombre').hasError('required') && formulario.get('nombre').touched"
+                            class="text-danger">
+                            Nombre es requerido
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion">Descripcion</label>
+                        <input type="text" class="form-control" id="descripcion" placeholder="Descripcion"
+                            formControlName="descripcion">
+                        <!-- Agregado: Mostrar error si el campo es requerido y no se ha llenado -->
+                        <div *ngIf="formulario.get('descripcion').hasError('required') && formulario.get('descripcion').touched"
+                            class="text-danger">
+                            Descripcion es requerida
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" [disabled]="formulario.invalid"
+                        style="width: 100%;">Guardar</button>
+                </form>
+            </div>
+        </app-card>
+    </div>
+</div>

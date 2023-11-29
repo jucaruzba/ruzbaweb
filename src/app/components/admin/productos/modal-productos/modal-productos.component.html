@@ -1,0 +1,90 @@
+<div class="container">
+    <div class="header">
+        <h3>PRODUCTO</h3>
+    </div>
+    <div class="body">
+        <app-card [hidHeader]="true">
+            <div class="col-md-12 ">
+                <form [formGroup]="formulario" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+                    <img *ngIf="this.modoEditar===true" style="max-width: 100px;"
+                        [src]="data.imagen" alt="">
+
+
+                    <div class="form-group">
+                        <input type="file"  formControlName="imagen" (change)="onFileSelected($event)" accept="image/*">
+
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" placeholder="Nombre del Producto"
+                            formControlName="nombre">
+                        <!-- Agregado: Mostrar error si el campo es requerido y no se ha llenado -->
+                        <div *ngIf="formulario.get('nombre').hasError('required') && formulario.get('nombre').touched"
+                            class="text-danger">
+                            Nombre es requerido
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="nombre">Precio</label>
+                        <input type="number" class="form-control" id="precio" placeholder="Precio"
+                            formControlName="precio">
+                        <!-- Agregado: Mostrar error si el campo es requerido y no se ha llenado -->
+                        <div *ngIf="formulario.get('precio').hasError('required') && formulario.get('precio').touched"
+                            class="text-danger">
+                            Precio es requerido
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label for="nombre">Descripcion</label>
+                        <input type="text" class="form-control" id="descripcion" placeholder="Descripcion"
+                            formControlName="descripcion">
+                        <!-- Agregado: Mostrar error si el campo es requerido y no se ha llenado -->
+                        <div *ngIf="formulario.get('descripcion').hasError('required') && formulario.get('descripcion').touched"
+                            class="text-danger">
+                            Descripcion es requerido
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label for="nombre">Codigo Sat</label>
+                        <input type="text" class="form-control" id="codigoSat" placeholder="Codigo Sat"
+                            formControlName="codigoSat">
+                        <!-- Agregado: Mostrar error si el campo es requerido y no se ha llenado -->
+                        <div *ngIf="formulario.get('codigoSat').hasError('codigoSat') && formulario.get('codigoSat').touched"
+                            class="text-danger">
+                            Codigo Sat es requerido
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="nombre">Categoria</label>
+                        <select class="form-select" formControlName="idCategoria">
+                            <option *ngFor="let categoria of categorias" [ngValue]="categoria">
+                                {{ categoria.nombre }}
+                            </option>
+                        </select>
+                        <div *ngIf="formulario.get('idCategoria').hasError('required') && formulario.get('idCategoria').touched"
+                            class="text-danger">
+                            Categoría es requerida
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nombre">Unidad</label>
+                        <select class="form-select" formControlName="idUnidad">
+                            <option *ngFor="let unidad of unidades" [ngValue]="unidad">
+                                {{ unidad.presentacion }}
+                            </option>
+                        </select>
+                        <div *ngIf="formulario.get('idUnidad').hasError('required') && formulario.get('idUnidad').touched"
+                            class="text-danger">
+                            Unidad es requerida
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" [disabled]="formulario.invalid"
+                        style="width: 100%;">Guardar</button>
+                </form>
+                <button type="submit" class="btn btn-danger" (click)="eliminarProducto()" [disabled]="this.modoEditar===false"> Eliminar Producto</button>
+            </div>
+        </app-card>
+    </div>
+</div>
