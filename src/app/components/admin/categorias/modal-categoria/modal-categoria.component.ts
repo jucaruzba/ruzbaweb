@@ -48,7 +48,7 @@ export class ModalCategoriaComponent  implements OnInit{
           this.dialogRef.close(resp);
           Util.successMessage(resp.mensaje);
           setTimeout(() => {
-            this.router.navigate(['/admin/categorias']);
+            window.location.reload();
           }, 1000);
         })
       } else {
@@ -59,7 +59,7 @@ export class ModalCategoriaComponent  implements OnInit{
           Util.successMessage(resp.mensaje);
           this.dialogRef.close(resp);
           setTimeout(() => {
-            this.router.navigate(['/admin/categorias']);
+            window.location.reload();
           }, 1000);
         });
       }

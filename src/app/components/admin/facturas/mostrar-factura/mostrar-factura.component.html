@@ -5,35 +5,24 @@
                 <div class="row col-md-12">
                     <div class="col-md-4">
                         <div>
-                            <img [src]="pedido.idCliente.idUser.imagen" style="max-width: 150px;" alt="">
+                            <img [src]="factura.idCliente.idUser.imagen" style="max-width: 150px;" alt="">
                         </div>
     
-                        <h5 class="m-b-15">{{pedido.idCliente.nombre}}</h5>
+                        <h5 class="m-b-15">{{factura.idCliente.nombre}}</h5>
                         <div class="risk-rate">
-                            <span><b class="text-muted">{{pedido.fecha}}</b></span>
+                            <span><b class="text-muted">{{factura.fecha}}</b></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="row justify-content-center m-t-10 b-t-default m-l-0 m-r-0">
-                            <div class="col m-t-15 b-r-default">
-                                <h6 class="text-muted">Estatus</h6>
-                                <button type="button" class="btn btn-dark" (click)="actualizarEstatus(pedido)"
-                                    ng-style="{'color': pedido.estatus === 0 ? 'blue' : (pedido.estatus === 1 ? 'yellow' : (pedido.estatus === 2 ? 'orange' : 'green'))}">
-                                    {{ pedido.estatus === 0 ? 'Nuevo pedido' : (pedido.estatus === 1 ? 'En preparación' :
-                                    (pedido.estatus === 2 ? 'En ruta' : 'Entregado')) }}
-                                </button>
-                            </div>
-    
                             <div class="col m-t-15">
                                 <h6 class="text-muted">Total</h6>
                                 <div class="input-group-prepend align-items-center">
-                                    <span class="input-group-text align-items-center">$ {{pedido.total}}</span>
+                                    <span class="input-group-text align-items-center">$ {{factura.total}}</span>
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-primary" (click)="editarPedido()">Editar Pedido</button>
-    
-                            <input type="text" placeholder="Observaciones para nota" [(ngModel)]="observaciones"class="form-control input-observaciones">
-                            <button type="button" class="btn btn-warning" (click)="pdfNota()">Descargar Nota</button>
+                            <button type="button" class="btn btn-primary" (click)="editarFactura()">Editar Factura</button>
+                                <button type="button" class="btn btn-warning" (click)="pdfNota()">Descargar Factura</button>
                         </div>
                     </div>
                 </div>
@@ -41,9 +30,9 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <h4>PEDIDO</h4>
+                <h4>DETALLES</h4>
                 <div class="row">
-                    <div *ngFor="let detalleCarrito of detallesPedido" class="cardProducto" class="col-md-6">
+                    <div *ngFor="let detalleCarrito of detallesFactura" class="cardProducto" class="col-md-6">
                         <app-card [hidHeader]="true">
                             <div class="row align-items-center">
                                 <div class="col-6 text-right">

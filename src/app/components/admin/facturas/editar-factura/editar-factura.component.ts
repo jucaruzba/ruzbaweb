@@ -1,36 +1,35 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Categoria } from 'src/app/data/Categoria';
 import { Cliente } from 'src/app/data/Cliente';
-import { DetallePedido } from 'src/app/data/DetallePedido';
-import { Pedido } from 'src/app/data/Pedido';
+import { DetalleFactura } from 'src/app/data/DetalleFactura';
+import { Factura } from 'src/app/data/Facturas';
 import { Producto } from 'src/app/data/Producto';
-import { CategoriaService } from 'src/app/services/categoria.service';
 import { ClienteService } from 'src/app/services/cliente.service';
-import { DetallePedidoService } from 'src/app/services/detalle-pedido.service';
-import { PedidoService } from 'src/app/services/pedido.service';
+import { DetalleFacturasService } from 'src/app/services/detalle-facturas.service';
+import { FacturasService } from 'src/app/services/facturas.service';
 import { ProductoService } from 'src/app/services/producto.service';
 import { Util } from 'src/app/util';
 
 @Component({
-  selector: 'app-modal-editar-pedido',
-  templateUrl: './modal-editar-pedido.component.html',
-  styleUrls: ['./modal-editar-pedido.component.scss']
+  selector: 'app-editar-factura',
+  templateUrl: './editar-factura.component.html',
+  styleUrls: ['./editar-factura.component.scss']
 })
-export class ModalEditarPedidoComponent implements OnInit {
-  pedido: Pedido
-  detallesPedido: DetallePedido[] = []
-  productos: Producto[] = [];
-  clientes: Cliente[] = [];
-  categorias: Categoria[] = [];
-  detalleCarrito: DetallePedido[] = [];
+export class EditarFacturaComponent {
+
+
+  factura:Factura;
+  detallesFactura:DetalleFactura[]=[]
+  productos:Producto[]=[]
+  clientes:Cliente[]=[]
+  detalleCarrito: DetalleFactura[] = [];
   totalCarrito: number = 0;
-  totalPedido: number = 0;
-  idPedido: number = 0
+  totalFactura: number = 0;
+
+  idFactura: number = 0
   public formulario: FormGroup;
-  nombreCliente: string
   cantidadProductos: { [idProducto: number]: number } = {};
 
 
@@ -42,69 +41,54 @@ export class ModalEditarPedidoComponent implements OnInit {
 
   constructor(
     private productosService: ProductoService,
-    private categoriasService: CategoriaService,
     private clientesService: ClienteService,
-    private pedidoService: PedidoService,
-    private detallePedidoService: DetallePedidoService,
+    private facturaService: FacturasService,
+    private detallesFacturaService: DetalleFacturasService,
     private formBuilder: FormBuilder,
     private datePipe: DatePipe,
     private route: ActivatedRoute,
     private router: Router,
-  ) {
+  ) {}
 
-  }
+
   ngOnInit() {
 
     //Se inizializa el formulario
     this.formulario = this.formBuilder.group({
-      idPedido: 0,
-      estatus: 0,
+      idFactura: 0,
       fecha: ['', Validators.required],
       total: 0,
       idCliente: [null, Validators.required]
     });
 
     this.route.queryParams.subscribe(queryParams => {
-      this.idPedido = queryParams['idPedido'];
-      this.nombreCliente = queryParams['nombre'];
+      this.idFactura = queryParams['idFactura'];
     });
 
     this.clientesService.getAllClientes().subscribe(resp => {
       this.clientes = resp.lista
     })
 
-    this.pedidoService.getPedidosDetalles(this.idPedido).subscribe(resp => {
-      this.pedido = resp.object;
-      this.detallesPedido = resp.lista;
-      this.totalPedido = this.pedido.total;
+    this.facturaService.getFacturaDetalles(this.idFactura).subscribe(resp => {
+      this.factura = resp.object;
+      this.detallesFactura = resp.lista;
+      this.totalFactura = this.factura.total;
+
       this.formulario = this.formBuilder.group({
-        idPedido: this.formBuilder.control(this.pedido.idPedido),
-        estatus: this.formBuilder.control(this.pedido.estatus),
-        fecha: this.formBuilder.control(this.pedido.fecha),
-        total: this.formBuilder.control(this.totalPedido),
-        idCliente: this.formBuilder.control(this.pedido.idCliente)
+        idFactura: this.formBuilder.control(this.factura.idFactura),
+        fecha: this.formBuilder.control(this.factura.fecha),
+        total: this.formBuilder.control(this.totalFactura),
+        idCliente: this.formBuilder.control(this.factura.idCliente)
       });
 
-      this.formulario.get('idPedido')?.disable();
+      this.formulario.get('idFactura')?.disable();
       this.formulario.get('total')?.disable();
     });
-
-    this.categoriasService.getAllCategorias().subscribe(resp => {
-      this.categorias = resp.lista
-    })
     this.productosService.getAllProductos().subscribe(resp => {
       this.productos = resp.lista
     })
   }
 
-  obtenerDetalles():void{
-    this.pedidoService.getPedidosDetalles(this.idPedido).subscribe(resp=>{
-      this.detallesPedido = resp.lista;
-    })
-  }
-  obtenerProductosPorCategoria(categoria: Categoria): Producto[] {
-    return this.productos.filter(producto => producto.idCategoria.idCategoria === categoria.idCategoria);
-  }
   agregarCarrito(cantidadProducto: number, producto: Producto) {
     if (this.detalleCarrito.length === 0) {
       this.totalCarrito = 0;
@@ -116,11 +100,11 @@ export class ModalEditarPedidoComponent implements OnInit {
         detalleExistente.cantidad += cantidadProducto;
         detalleExistente.suma += cantidadProducto * producto.precio;
       } else {
-        const nuevoDetalle: DetallePedido = {
+        const nuevoDetalle: DetalleFactura = {
           cantidad: cantidadProducto,
           suma: cantidadProducto * producto.precio,
           idProducto: producto,
-          idPedido: this.pedido
+          idFactura: this.factura
         };
         this.detalleCarrito.push(nuevoDetalle);
       }
@@ -141,20 +125,18 @@ export class ModalEditarPedidoComponent implements OnInit {
       console.error('No valido');
     }
   }
-
-  borrarDetalle(detalle: DetallePedido) {
+  borrarDetalle(detalle: DetalleFactura) {
     Util.confirmMessage('¿Seguro que deseas eliminar a '.concat(detalle.idProducto.nombre).concat(" ?"), () => {
-      this.detallePedidoService.deleteDetalle(detalle.idDetalle).subscribe(
+      this.detallesFacturaService.deleteDetalle(detalle.idDetalle).subscribe(
         (resp) => {
-          this.totalPedido -= detalle.suma;
-          this.pedido = {
-            idPedido: this.pedido.idPedido,
-            estatus: this.pedido.estatus,
-            fecha: this.pedido.fecha,
-            total: this.totalPedido,
-            idCliente: this.pedido.idCliente
+          this.totalFactura -= detalle.suma;
+          this.factura = {
+            idFactura: this.factura.idFactura,
+            fecha: this.factura.fecha,
+            total: this.totalFactura,
+            idCliente: this.factura.idCliente
           }
-          this.pedidoService.updatePedido(this.pedido).subscribe(resp => {
+          this.facturaService.updateFactura(this.factura).subscribe(resp => {
           })
           Util.successMessage(resp.mensaje);
           setTimeout(() => {
@@ -168,38 +150,40 @@ export class ModalEditarPedidoComponent implements OnInit {
       );
     });
   }
-  editarDetalle(cantidad: number) {
 
+  obtenerDetalles():void{
+    this.facturaService.getFacturaDetalles(this.idFactura).subscribe(resp=>{
+      this.detallesFactura = resp.lista;
+    })
   }
 
   onSubmit() {
     let fechaSeleccionada: Date = this.formulario.get('fecha')?.value;
     let fechaFormateada: string = this.datePipe.transform(fechaSeleccionada, 'yyyy-MM-dd');
-    let totalPedidoCompleto: number = this.totalCarrito + this.totalPedido;
+    let totalPedidoCompleto: number = this.totalCarrito + this.totalFactura;
 
-    this.pedido = {
-      idPedido: this.pedido.idPedido,
-      estatus: this.pedido.estatus,
+    this.factura = {
+      idFactura: this.factura.idFactura,
       fecha: fechaFormateada,
       total: totalPedidoCompleto,
-      idCliente: this.pedido.idCliente
+      idCliente: this.factura.idCliente
     }
-    this.pedidoService.updatePedido(this.pedido).subscribe(resp => {
-      let pedidoCreado: Pedido;
-      pedidoCreado = resp.object;
+    this.facturaService.updateFactura(this.factura).subscribe(resp => {
+      let facturaCreado: Factura;
+      facturaCreado = resp.object;
 
       this.detalleCarrito.forEach(detalleCarrito => {
 
-        const detalleExistente = this.detallesPedido.find(detallePedido =>
+        const detalleExistente = this.detallesFactura.find(detallePedido =>
           detallePedido.idProducto.idProducto === detalleCarrito.idProducto.idProducto
         );
         if (detalleExistente) {
           detalleExistente.cantidad += detalleCarrito.cantidad;
           detalleExistente.suma += detalleCarrito.suma;
-          this.detallePedidoService.updateDetalle(detalleExistente).subscribe(updateResp => {
+          this.detallesFacturaService.updateDetalle(detalleExistente).subscribe(updateResp => {
           });
         } else {
-          this.detallePedidoService.createDetalles([detalleCarrito]).subscribe(createResp => {
+          this.detallesFacturaService.createDetalles([detalleCarrito]).subscribe(createResp => {
           });
         }
       });
@@ -207,13 +191,9 @@ export class ModalEditarPedidoComponent implements OnInit {
       this.formulario.reset();
       Util.successMessage(resp.mensaje);
       setTimeout(() => {
-        this.router.navigate(['/admin/pedidos']);
+        this.router.navigate(['/admin/facturas']);
       }, 1000);
     });
-
-  }
-
-  productosdelPedido() {
 
   }
 
@@ -225,4 +205,5 @@ export class ModalEditarPedidoComponent implements OnInit {
       this.productosFiltrados = this.productos.filter(item => item.nombre.toLowerCase().includes(terminoLowerCase));
     }
   }
+
 }

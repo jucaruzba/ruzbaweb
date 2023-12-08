@@ -2,32 +2,30 @@ import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Console } from 'console';
-import { Categoria } from 'src/app/data/Categoria';
 import { Cliente } from 'src/app/data/Cliente';
-import { DetallePedido } from 'src/app/data/DetallePedido';
-import { Pedido } from 'src/app/data/Pedido';
+import { DetalleFactura } from 'src/app/data/DetalleFactura';
+import { Factura } from 'src/app/data/Facturas';
 import { Producto } from 'src/app/data/Producto';
-import { CategoriaService } from 'src/app/services/categoria.service';
 import { ClienteService } from 'src/app/services/cliente.service';
-import { DetallePedidoService } from 'src/app/services/detalle-pedido.service';
-import { PedidoService } from 'src/app/services/pedido.service';
+import { DetalleFacturasService } from 'src/app/services/detalle-facturas.service';
+import { FacturasService } from 'src/app/services/facturas.service';
 import { ProductoService } from 'src/app/services/producto.service';
 import { Util } from 'src/app/util';
 
 @Component({
-  selector: 'app-crear-pedido',
-  templateUrl: './crear-pedido.component.html',
-  styleUrls: ['./crear-pedido.component.scss']
+  selector: 'app-crear-factura',
+  templateUrl: './crear-factura.component.html',
+  styleUrls: ['./crear-factura.component.scss']
 })
-export class CrearPedidoComponent implements OnInit {
-  detallesPedido: DetallePedido[] = []
+export class CrearFacturaComponent implements OnInit{
+
+  detallesFactura:DetalleFactura[]=[];
   productos: Producto[] = [];
   clientes: Cliente[] = [];
-  pedido: Pedido;
-  categorias: Categoria[] = [];
-  detalleCarrito: DetallePedido[] = [];
-  totalCarrito: number = 0;
+  factura:Factura;
+
+  detalleCarrito:DetalleFactura[]=[];
+  totalCarrito:number=0;
   public formulario: FormGroup;
 
   terminoBusqueda: string = '';
@@ -35,41 +33,35 @@ export class CrearPedidoComponent implements OnInit {
 
   cantidadProductos: { [idProducto: number]: number } = {};
 
+
   constructor(
     private productosService: ProductoService,
-    private categoriasService: CategoriaService,
     private clientesService: ClienteService,
-    private pedidoService: PedidoService,
-    private detallePedidoService: DetallePedidoService,
+    private facturasService: FacturasService,
+    private detalleFacturaService: DetalleFacturasService,
     private formBuilder: FormBuilder,
     private datePipe: DatePipe,
     private router: Router,
   ) { }
 
+
   ngOnInit(): void {
     this.formulario = this.formBuilder.group({
-      idPedido: 0,
-      estatus: 0,
+      idFactura: 0,
       fecha: ['', Validators.required],
       total: 0,
       idCliente: [null, Validators.required]
     });
-
     this.formulario.get('total')?.disable();
+
     this.clientesService.getAllClientes().subscribe(resp => {
       this.clientes = resp.lista
     })
-    this.categoriasService.getAllCategorias().subscribe(resp => {
-      this.categorias = resp.lista
-    })
+
     this.productosService.getAllProductos().subscribe(resp => {
       this.productos = resp.lista
     })
 
-  }
-
-  obtenerProductosPorCategoria(categoria: Categoria): Producto[] {
-    return this.productos.filter(producto => producto.idCategoria.idCategoria === categoria.idCategoria);
   }
 
   agregarCarrito(cantidadProducto: number, producto: Producto) {
@@ -83,7 +75,7 @@ export class CrearPedidoComponent implements OnInit {
         detalleExistente.cantidad += cantidadProducto;
         detalleExistente.suma += cantidadProducto * producto.precio;
       } else {
-        const nuevoDetalle: DetallePedido = {
+        const nuevoDetalle: DetalleFactura = {
           cantidad: cantidadProducto,
           suma: cantidadProducto * producto.precio,
           idProducto: producto,
@@ -107,13 +99,14 @@ export class CrearPedidoComponent implements OnInit {
       console.error('No valido');
     }
   }
+
+
   onSubmit() {
     let fechaSeleccionada: Date = this.formulario.get('fecha')?.value;
     let fechaFormateada: string = this.datePipe.transform(fechaSeleccionada, 'yyyy-MM-dd');
     console.log(fechaFormateada);
-    this.pedido = {
-      idPedido: 0,
-      estatus: 0,
+    this.factura = {
+      idFactura: 0,
       fecha: fechaFormateada,
       total: this.totalCarrito,
       idCliente: this.formulario.get('idCliente')?.value,
@@ -121,17 +114,17 @@ export class CrearPedidoComponent implements OnInit {
 
     
     if (this.detalleCarrito.length > 0) {
-      this.pedidoService.createPedido(this.pedido).subscribe(resp => {
-        let pedidoCreado: Pedido;
-        pedidoCreado = resp.object
+      this.facturasService.createFactura(this.factura).subscribe(resp => {
+        let facturaCreada: Factura;
+        facturaCreada = resp.object
         this.detalleCarrito.forEach(detalle => {
-          detalle.idPedido = pedidoCreado
+          detalle.idFactura = facturaCreada
         });
-        this.detallePedidoService.createDetalles(this.detalleCarrito).subscribe(resp => { })
+        this.detalleFacturaService.createDetalles(this.detalleCarrito).subscribe(resp => { })
         this.formulario.reset()
         Util.successMessage(resp.mensaje);
         setTimeout(() => {
-          this.router.navigate(['/admin/pedidos']);
+          this.router.navigate(['/admin/facturas']);
         }, 1000);
       })
     } else {

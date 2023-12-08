@@ -11,6 +11,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTabsModule } from '@angular/material/tabs';
 import { DatePipe } from '@angular/common';
+import { LOCALE_ID} from '@angular/core';
 // project import
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -49,7 +50,15 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from 'src/environments/environment'
 import { LoginComponent } from './components/admin/login/login.component';
 import { AuthGuard } from './auth.guard';
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
+import { FacturasComponent } from './components/admin/facturas/facturas.component';
+import { CrearComponent } from './componentes/admin/facturas/crear/crear.component';
+import { CrearFacturaComponent } from './components/admin/facturas/crear-factura/crear-factura.component';
+import { EditarFacturaComponent } from './components/admin/facturas/editar-factura/editar-factura.component';
+import { MostrarFacturaComponent } from './components/admin/facturas/mostrar-factura/mostrar-factura.component';
 
+registerLocaleData(localeEs);
 @NgModule({
   declarations: [
     AppComponent,
@@ -82,6 +91,11 @@ import { AuthGuard } from './auth.guard';
     MostrarComponent,
     HomeComponent,
     LoginComponent,
+    FacturasComponent,
+    CrearComponent,
+    CrearFacturaComponent,
+    EditarFacturaComponent,
+    MostrarFacturaComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, SharedModule, BrowserAnimationsModule,
     HttpClientModule,
@@ -94,7 +108,9 @@ import { AuthGuard } from './auth.guard';
     MatTabsModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
   ],
-  providers: [NavigationItem,DatePipe,AuthGuard],
+  providers: [NavigationItem,DatePipe,AuthGuard,
+    { provide: LOCALE_ID, useValue: 'es' }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

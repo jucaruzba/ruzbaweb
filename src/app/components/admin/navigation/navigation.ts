@@ -38,6 +38,14 @@ const NavigationItems = [
         url: '/admin/pedidos',
         breadcrumbs: false
       },
+      {
+        id: 'default',
+        title: 'FACTURAS',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/admin/facturas',
+        breadcrumbs: false
+      },
 
       {
         id: 'productos',

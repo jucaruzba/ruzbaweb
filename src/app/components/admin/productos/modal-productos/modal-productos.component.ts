@@ -100,7 +100,7 @@ export class ModalProductosComponent implements OnInit {
         this.dialogRef.close(resp);
         Util.successMessage(resp.mensaje);
         setTimeout(() => {
-          this.router.navigate(['/admin/productos']);
+          window.location.reload();
         }, 1000);
       });
     } else {
@@ -108,7 +108,7 @@ export class ModalProductosComponent implements OnInit {
         this.dialogRef.close(resp);
         Util.successMessage(resp.mensaje);
         setTimeout(() => {
-          this.router.navigate(['/admin/productos']);
+          window.location.reload();
         }, 1000);
       });
     }

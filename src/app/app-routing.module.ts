@@ -19,18 +19,20 @@ import { MostrarComponent } from './components/admin/pedidos/mostrar/mostrar.com
 import { HomeComponent } from './components/admin/home/home.component';
 import { LoginComponent } from './components/admin/login/login.component';
 import { AuthGuard } from './auth.guard';
+import { FacturasComponent } from './components/admin/facturas/facturas.component';
+import { CrearFacturaComponent } from './components/admin/facturas/crear-factura/crear-factura.component';
+import { EditarFacturaComponent } from './components/admin/facturas/editar-factura/editar-factura.component';
 
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'admin',
     pathMatch: 'full'
   },
   {
     path: 'admin',
     component: AdminComponent,
-    canActivate:[AuthGuard],
     children:[
       { path: '', redirectTo: 'home', 
       pathMatch: 'full'},
@@ -42,7 +44,10 @@ const routes: Routes = [
       {path:'crearPedido', component:CrearPedidoComponent},
       {path:'editarPedido', component:ModalEditarPedidoComponent},
       {path:'clientes', component:ClientesComponent},
-      {path:'productos', component:ProductosComponent}
+      {path:'productos', component:ProductosComponent},
+      {path:'facturas', component:FacturasComponent},
+      {path:'crearFactura', component:CrearFacturaComponent},
+      {path:'editarFactura', component:EditarFacturaComponent},
     ]
   },
   {
